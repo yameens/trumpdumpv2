@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { createHash } from 'crypto';
 import { processPost } from './processPost.js';
+import type { AnalysisResult } from './processPost.js';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -147,6 +148,27 @@ async function getLatestDbPost(supabase: SupabaseClient): Promise<DbPost | null>
   return row as DbPost;
 }
 
+// ─── Database write ──────────────────────────────────────────────────────────
+
+async function insertPost(
+  supabase: SupabaseClient,
+  scraped: ScrapedPost,
+  result: AnalysisResult,
+): Promise<void> {
+  const { error } = await supabase.from(TABLE_NAME).insert({
+    timestamp:  result.timestamp,
+    sentiment:  result.sentiment,
+    content:    result.content,
+    confidence: result.confidence,
+    industry:   result.industry,
+    tickers:    result.tickers,
+  });
+  if (error) {
+    throw new Error(`[sync] Supabase insert failed: ${error.message}`);
+  }
+  console.log(`[sync] Inserted status ${scraped.statusId} into DB`);
+}
+
 // ─── Main orchestrator ───────────────────────────────────────────────────────
 
 /**
@@ -176,7 +198,12 @@ export async function syncLatestPost(): Promise<void> {
 
   if (!dbPost) {
     console.log('[sync] DB is empty — processing first post');
-    await processPost(scraped);
+    const result = await processPost(scraped);
+    if (result) {
+      await insertPost(supabase, scraped, result);
+    } else {
+      console.log('[sync] Post not market-relevant — skipping DB write');
+    }
     return;
   }
 
@@ -194,5 +221,10 @@ export async function syncLatestPost(): Promise<void> {
   console.log(
     `[sync] Hash mismatch: scraped=${scrapedHash.slice(0, 12)}… db=${dbHash.slice(0, 12)}… — triggering processPost()`,
   );
-  await processPost(scraped);
+  const result = await processPost(scraped);
+  if (result) {
+    await insertPost(supabase, scraped, result);
+  } else {
+    console.log('[sync] Post not market-relevant — skipping DB write');
+  }
 }

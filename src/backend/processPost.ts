@@ -1,6 +1,7 @@
 import OpenAI, { APIError } from 'openai';
 import type { ScrapedPost } from './sync.js';
 import { scoreConfidence } from './scoreConfidence.js';
+import { isRelevant } from './isRelevant.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIGURABLE CONSTANTS — edit these freely without touching anything else
@@ -10,17 +11,99 @@ import { scoreConfidence } from './scoreConfidence.js';
 // Add every industry you want the LLM to choose from.
 // The LLM will be required to pick one of these exactly.
 export const INDUSTRY_LIST: string[] = [
-  // e.g.:
-  // "Technology",
-  // "Energy",
-  // "Defense",
-  // "Finance",
-  // "Healthcare",
-  // "Real Estate",
-  // "Retail",
-  // "Automotive",
-  // "Agriculture",
-  // "Media & Entertainment",
+  // --- ENERGY ---
+  "Energy Equipment & Services",
+  "Oil, Gas & Consumable Fuels",
+
+  // --- MATERIALS ---
+  "Chemicals",
+  "Construction Materials",
+  "Containers & Packaging",
+  "Metals & Mining",
+  "Paper & Forest Products",
+
+  // --- INDUSTRIALS ---
+  "Aerospace & Defense",
+  "Building Products",
+  "Construction & Engineering",
+  "Electrical Equipment",
+  "Industrial Conglomerates",
+  "Machinery",
+  "Trading Companies & Distributors",
+  "Commercial Services & Supplies",
+  "Professional Services",
+  "Air Freight & Logistics",
+  "Airlines",
+  "Marine Transportation",
+  "Ground Transportation",
+  "Transportation Infrastructure",
+
+  // --- CONSUMER DISCRETIONARY ---
+  "Automobile Components",
+  "Automobiles",
+  "Household Durables",
+  "Leisure Products",
+  "Textiles, Apparel & Luxury Goods",
+  "Hotels, Restaurants & Leisure",
+  "Diversified Consumer Services",
+  "Broadline Retail",
+  "Specialty Retail",
+
+  // --- CONSUMER STAPLES ---
+  "Consumer Staples Distribution & Retail",
+  "Beverages",
+  "Food Products",
+  "Tobacco",
+  "Household Products",
+  "Personal Care Products",
+
+  // --- HEALTH CARE ---
+  "Health Care Equipment & Supplies",
+  "Health Care Providers & Services",
+  "Health Care Technology",
+  "Biotechnology",
+  "Pharmaceuticals",
+  "Life Sciences Tools & Services",
+
+  // --- FINANCIALS ---
+  "Banks",
+  "Financial Services",
+  "Consumer Finance",
+  "Capital Markets",
+  "Insurance",
+  "Mortgage Real Estate Investment Trusts (REITs)",
+
+  // --- INFORMATION TECHNOLOGY ---
+  "IT Services",
+  "Software",
+  "Communications Equipment",
+  "Technology Hardware, Storage & Peripherals",
+  "Electronic Equipment, Instruments & Components",
+  "Semiconductors & Semiconductor Equipment",
+
+  // --- COMMUNICATION SERVICES ---
+  "Diversified Telecommunication Services",
+  "Wireless Telecommunication Services",
+  "Media",
+  "Entertainment",
+  "Interactive Media & Services",
+
+  // --- UTILITIES ---
+  "Electric Utilities",
+  "Gas Utilities",
+  "Multi-Utilities",
+  "Water Utilities",
+  "Independent Power and Renewable Electricity Producers",
+
+  // --- REAL ESTATE ---
+  "Real Estate Management & Development",
+  "Equity Real Estate Investment Trusts (REITs)",
+
+  // --- MISC / CATCH-ALL ---
+  "Conglomerates",
+  "Cryptocurrency & Digital Assets",
+  "Government & Policy",
+  "Other / Diversified"
 ];
 
 // ── PASTE YOUR TICKER LIST HERE ──────────────────────────────────────────────
@@ -28,14 +111,69 @@ export const INDUSTRY_LIST: string[] = [
 // The LLM will only return tickers found in this list.
 // Leave empty to allow free-form ticker detection (LLM picks any symbol it sees).
 export const TICKER_LIST: string[] = [
-  // e.g.:
-  // "AAPL",
-  // "NVDA",
-  // "TSLA",
-  // "META",
-  // "MSFT",
-  // "AMZN",
-  // "GOOGL",
+  // --- TECHNOLOGY & SEMICONDUCTORS ---
+  "AAPL", "MSFT", "NVDA", "AVGO", "ORCL", "ADBE", "CRM", "AMD", "CSCO", "ACN",
+  "IBM", "INTC", "TXN", "QCOM", "AMAT", "MU", "LRCX", "ADI", "KLAC", "SNPS",
+  "CDNS", "PANW", "FTNT", "CRWD", "NOW", "ROP", "APH", "MSI", "TEL", "HPE",
+  "HPQ", "STX", "WDC", "GLW", "TER", "ANET", "MCHP", "ON", "MPWR", "TYL",
+  "FSLR", "ENPH", "KEYS", "IT", "AKAM", "ZBRA", "TRMB", "GEN", "JNPR", "SWKS",
+
+  // --- COMMUNICATION SERVICES ---
+  "GOOGL", "GOOG", "META", "NFLX", "DIS", "TMUS", "VZ", "T", "CMCSA", "CHTR",
+  "EA", "TTWO", "OMC", "IPG", "LYV", "MTCH", "PARA", "FOXA", "FOX", "NWSA",
+
+  // --- CONSUMER DISCRETIONARY ---
+  "AMZN", "TSLA", "HD", "MCD", "NKE", "LOW", "SBUX", "TJX", "BKNG", "CMG",
+  "ORLY", "AZO", "MAR", "HLT", "F", "GM", "LULU", "DHI", "PHM", "LEN",
+  "TSCO", "ROST", "YUM", "DRI", "DASH", "ABNB", "EBAY", "ETSY", "BBY", "GRMN",
+  "VFC", "HAS", "MAT", "POOL", "PHM", "NVR", "MGM", "WWY", "RL", "TPR",
+
+  // --- CONSUMER STAPLES ---
+  "WMT", "PG", "COST", "KO", "PEP", "PM", "MO", "MDLZ", "CL", "TGT",
+  "EL", "KDP", "STZ", "GIS", "SYY", "ADM", "KR", "KMB", "HSY", "MKC",
+  "CHD", "CLX", "K", "LW", "CPB", "SJM", "TAP", "CAG", "DLTR", "DG",
+
+  // --- HEALTHCARE ---
+  "LLY", "UNH", "JNJ", "PFE", "ABBV", "MRK", "TMO", "ABT", "DHR", "ISRG",
+  "AMGN", "BMY", "VRTX", "SYK", "GILD", "ELV", "CI", "CVS", "BSX", "MDT",
+  "ZTS", "HCA", "REGN", "BDX", "MCK", "COR", "EW", "IDXX", "HUM", "IQV",
+  "DXCM", "A", "MTD", "STE", "WAT", "RMD", "BAX", "WST", "VTRS", "BIIB",
+  "ALGN", "MOH", "CNC", "XRAY", "MRNA", "GEV", "TECH", "BIO", "CRL",
+
+  // --- FINANCIALS ---
+  "BRK.B", "JPM", "V", "MA", "BAC", "WFC", "AXP", "MS", "GS", "C",
+  "BLK", "SPGI", "BX", "KKR", "CME", "SCHW", "MMC", "AON", "ICE", "PGR",
+  "CB", "MCO", "USB", "PNC", "TROW", "MET", "PRU", "TRV", "AFL", "ALL",
+  "COF", "DFS", "STT", "BK", "FITB", "MTB", "HBAN", "RF", "KEY", "CFG",
+  "BRO", "AJG", "WTW", "L", "HIG", "PFG", "AMP", "BEN", "IVZ", "RJF",
+
+  // --- INDUSTRIALS ---
+  "GE", "CAT", "UNP", "HON", "UPS", "RTX", "BA", "LMT", "DE", "LRCX",
+  "ETN", "WM", "NOC", "GD", "NSC", "CSX", "FDX", "EMR", "ITW", "PH",
+  "ROP", "TT", "CARR", "OTIS", "FAST", "CPRT", "VRSK", "ODFL", "PCAR", "GWW",
+  "CMI", "PAYX", "AME", "IR", "ROK", "DOV", "XYL", "EFX", "PWR", "HUBB",
+  "ACM", "LDOS", "VMC", "MLM", "TFI", "DAL", "UAL", "LUV", "AAL", "JBHT",
+
+  // --- ENERGY ---
+  "XOM", "CVX", "COP", "EOG", "SLB", "MPC", "PSX", "VLO", "OXY", "HES",
+  "HAL", "WMB", "OKE", "DVN", "FANG", "BKR", "KMI", "TRGP", "CTRA", "APA",
+  "MRO", "EQT", "FSHR", "CHK", "OVV", "CHK",
+
+  // --- MATERIALS ---
+  "LIN", "SHW", "APD", "ECL", "FCX", "CTVA", "NEM", "DOW", "DD", "PPG",
+  "VMC", "MLM", "ALB", "CF", "NUE", "STLD", "IFF", "FMC", "MOS", "CE",
+  "EMN", "LYB", "BALL", "AMCR", "PKG", "WRK", "IP",
+
+  // --- REAL ESTATE & UTILITIES ---
+  "PLD", "AMT", "EQIX", "WELL", "PSA", "DLR", "CCI", "O", "VICI", "SBAC",
+  "WY", "ARE", "CBRE", "AVB", "EQR", "EXR", "VTR", "BXP", "HST", "MAA",
+  "NEE", "SO", "DUK", "CEG", "SRE", "D", "AEP", "PEG", "EXC", "ED",
+  "XEL", "PCG", "WEC", "ES", "AWK", "ETR", "FE", "EIX", "CNP", "CMS",
+
+  // --- TOP GROWTH/TECH (NASDAQ 100 ADDITIONS) ---
+  "PLTR", "SQ", "PYPL", "COIN", "HOOD", "SHOP", "MELI", "SE", "SNOW", "TEAM",
+  "DDOG", "ZS", "OKTA", "MDB", "NET", "PATH", "U", "ROKU", "DKNG", "PINS",
+  "TSM", "ASML", "ARM", "SMCI", "SNDK", "LUMN", "FIGS", "BCBP"
 ];
 
 // ── LLM MODEL ────────────────────────────────────────────────────────────────
@@ -216,8 +354,16 @@ function validateAndNormalize(
  * Throws on invalid JSON, schema violations, or missing API key.
  *
  * NOTE: Does not write to the DB — the caller (syncLatestPost) owns persistence.
+ *
+ * Returns null if the post is not financially relevant (determined by isRelevant()).
  */
-export async function processPost(post: ScrapedPost): Promise<AnalysisResult> {
+export async function processPost(post: ScrapedPost): Promise<AnalysisResult | null> {
+  const relevant = await isRelevant(post);
+  if (!relevant) {
+    console.log(`[processPost] Status ${post.statusId} is not market-relevant — skipping analysis.`);
+    return null;
+  }
+
   if (INDUSTRY_LIST.length === 0) {
     console.warn(
       '[processPost] INDUSTRY_LIST is empty — industry validation is disabled. ' +
