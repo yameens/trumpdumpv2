@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
       "@backend": backendPath,
     };
 
+    // Ensure backend files outside frontend/ can resolve packages from frontend/node_modules
+    config.resolve.modules = [
+      ...(config.resolve.modules ?? ["node_modules"]),
+      path.resolve(__dirname, "node_modules"),
+    ];
+
     return config;
   },
 };
