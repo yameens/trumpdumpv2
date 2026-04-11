@@ -156,9 +156,9 @@ async function insertPost(
   result: AnalysisResult,
 ): Promise<void> {
   const { error } = await supabase.from(TABLE_NAME).insert({
-    timestamp:  result.timestamp,
+    timestamp:  new Date(scraped.timestamp).toISOString(),
     sentiment:  result.sentiment,
-    content:    result.content,
+    content:    scraped.content,
     confidence: result.confidence,
     industry:   result.industry,
     tickers:    result.tickers,

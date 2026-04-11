@@ -185,11 +185,9 @@ const LLM_MODEL = 'gpt-4o';
 const buildSystemPrompt = (industryList: string[], tickerList: string[]): string => `
 Analyze the following content and return a JSON object with these keys:
 
-timestamp: ISO 8601 string.
-
 sentiment: "bullish" or "bearish" (strictly).
 
-content: A clean, 2-sentence summary of the post.
+content: A clean, 2-sentence summary of the post for internal analysis context (not displayed to users).
 
 confidence: An integer 0-100 based on your certainty that this post will have a meaningful impact on the stated industry and tickers. Higher = more certain of market impact.
 
