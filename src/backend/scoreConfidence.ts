@@ -18,7 +18,30 @@ import type { AnalysisResult } from './processPost.js';
 //
 // ─────────────────────────────────────────────────────────────────────────────
 const CONFIDENCE_PROMPT = `
-[PASTE YOUR CONFIDENCE SCORING PROMPT HERE]
+Act as a senior financial data auditor. Your sole task is to evaluate the accuracy of an automated classification. 
+You will compare a raw "Post" against an "Initial Analysis" (Industry and Tickers).
+
+Assign a confidence score from 0 to 100 based on the following rubric:
+
+1. Industry Relevance (40 points):
+   a. Is the post explicitly about the identified industry? (e.g., if Industry is "Oil," does the text mention drilling, crude, or energy markets?)
+   b. Deduct points if the industry is only tangentially related.
+
+2. Ticker Precision (40 points):
+   a. 40 pts: Ticker/Company name is explicitly mentioned and is the primary subject.
+   b.20 pts: Ticker is mentioned but in a list or as a secondary reference.
+   c. 5 pts: Ticker is inferred but not named (High risk of error).
+   d. 0 pts: No ticker mentioned or the ticker does not belong to the identified industry.
+
+3. Contextual Certainty (20 points):
+   a. Is the text clear and unambiguous? 
+   b. Deduct points for sarcasm, vague pronouns ("this company"), or conflicting information.
+
+Scoring Guide:
+a. 90-100: Definitive. The post is clearly about the ticker/industry.
+b. 70-89: Likely. High probability but uses some inference.
+c. 40-69: Speculative. The connection is weak or the post is "noisy."
+d. 0-39: Poor. High chance of a false positive.
 
 Return ONLY a JSON object with a single key:
 { "confidence": <integer between 0 and 100> }

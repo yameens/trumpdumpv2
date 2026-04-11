@@ -1,0 +1,8 @@
+Column,Type,Description
+id,UUID,Primary Key
+timestamp,DateTime,When the post was originally published
+sentiment,Enum,bullish | bearish
+content,Text,Full text
+confidence,Integer,0 to 100
+industry,String,Validated against your list
+tickers,JSONB,"List of tickers (e.g. [""AAPL"", ""NVDA""])"

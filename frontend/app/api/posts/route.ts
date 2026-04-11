@@ -1,0 +1,46 @@
+import { createClient } from '@supabase/supabase-js';
+import { NextResponse } from 'next/server';
+
+function getSupabase() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) {
+    throw new Error('SUPABASE_URL and SUPABASE_SERVICE_KEY must be set');
+  }
+  return createClient(url, key);
+}
+
+export async function GET() {
+  try {
+    const supabase = getSupabase();
+
+    const [recentRes, weeklyRes] = await Promise.all([
+      supabase
+        .from('posts')
+        .select('*')
+        .order('timestamp', { ascending: false })
+        .limit(5),
+
+      supabase
+        .from('posts')
+        .select('*')
+        .gte('timestamp', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .order('confidence', { ascending: false })
+        .limit(5),
+    ]);
+
+    if (recentRes.error) throw recentRes.error;
+    if (weeklyRes.error) throw weeklyRes.error;
+
+    return NextResponse.json({
+      recent: recentRes.data ?? [],
+      weekly: weeklyRes.data ?? [],
+    });
+  } catch (err) {
+    console.error('[api/posts]', err);
+    return NextResponse.json(
+      { error: 'Failed to fetch posts' },
+      { status: 500 },
+    );
+  }
+}

@@ -1,3 +1,18 @@
 ---
+description: Rules for the automated sentiment scraping backend
+globs: ["src/backend/**", "scripts/**"]
 alwaysApply: true
 ---
+# Backend Logic Standards
+- **Strategy**: Scraping -> Check DB for Change -> LLM Sentiment -> DB Upsert.
+- **Data Integrity**: Never process the same post twice. Use a hash or ID comparison.
+- **AI Schema**: All LLM outputs must be valid JSON matching the defined columns.
+- **Safety**: All scraping must include exponential backoff and error logging.
+
+# Overall Mission
+
+Mission: determine how much a Trump Truth Social post can influence a particular stock. Useful tool for day traders and for my father. 
+
+User Function: 
+The user reads about the most recent five “tweets” from Donald Trump & what stock / industry it could impact positively or negatively the most. 
+The user also reads the most influential tweets from Donald Trump of this past week. 

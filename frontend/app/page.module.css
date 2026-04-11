@@ -1,0 +1,85 @@
+/* ── Page wrapper ─────────────────────────────────────────── */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* GIF — sits above the title image, centered */
+.gifAbove {
+  width: 20%;
+  height: auto;
+  margin-top: 15px;
+}
+
+/* Title image */
+.titleImage {
+  width: 100%;
+  height: auto;
+}
+
+/* ── Description ─────────────────────────────────────────── */
+.description {
+  width: 100%;
+  max-width: 900px;
+  margin: 12px auto 0;
+  padding: 0 16px;
+  padding-top: 26px; 
+  font-family: var(--font-pixelify), Arial, sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+
+/* ── Section labels ───────────────────────────────────────── */
+.sectionLabel {
+  width: 100%;
+  max-width: 340px;
+  margin: 48px auto 32px;
+  padding: 0 16px;
+}
+
+.sectionLabel img {
+  width: 100%;
+  height: auto;
+}
+
+/* ── Content area (placeholder) ──────────────────────────── */
+.content {
+  width: 100%;
+  max-width: 900px;
+  padding: 0 16px 64px;
+}
+
+/* ── Loading / empty states ───────────────────────────────── */
+.loadingText,
+.emptyText {
+  text-align: center;
+  font-size: 1.1rem;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 32px 0;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .gifAbove {
+    width: 26%;
+  }
+
+  .sectionLabel {
+    margin-top: 20px;
+  }
+}

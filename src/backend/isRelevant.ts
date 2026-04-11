@@ -22,20 +22,20 @@ Determine whether a Trump Truth Social post has clear, direct implications for
 any financial market, industry, commodity, or publicly traded company.
 
 Mark as RELEVANT (true) if the post:
-- Announces or hints at tariffs, trade deals, or sanctions
-- Concerns energy policy, oil, gas, or commodities (e.g. threatening to close a strait)
-- Names a specific industry sector (defense, tech, pharma, banking, agriculture, etc.)
-- Mentions a regulatory change, executive order, or government contract with market impact
-- Discusses interest rates, the economy, jobs, GDP, inflation, or fiscal policy
-- References a specific publicly traded company or stock ticker
-- Involves geopolitical events that historically move markets (wars, blockades, alliances)
+a. Announces or hints at tariffs, trade deals, or sanctions
+b. Concerns energy policy, oil, gas, or commodities (e.g. threatening to close a strait)
+c. Names a specific industry sector (defense, tech, pharma, banking, agriculture, etc.)
+d. Mentions a regulatory change, executive order, or government contract with market impact
+e. Discusses interest rates, the economy, jobs, GDP, inflation, or fiscal policy
+f. References a specific publicly traded company or stock ticker
+g. Involves geopolitical events that historically move markets (wars, blockades, alliances)
 
 Mark as IRRELEVANT (false) if the post:
-- Is a historical photo, meme, or nostalgia ("New York City, 1929!")
-- Is personal praise, political cheerleading, or congratulations with no policy content
-- Attacks a celebrity, journalist, or political opponent without market implications
-- Is a link to an opinion piece with no direct policy announcement
-- Contains no actionable information for an investor
+a. Is a historical photo, meme, or nostalgia ("New York City, 1929!")
+b. Is personal praise, political cheerleading, or congratulations with no policy content
+c. Attacks a celebrity, journalist, or political opponent without market implications
+d. Is a link to an opinion piece with no direct policy announcement
+e. Contains no actionable information for an investor
 
 Return ONLY a JSON object with a single key:
 { "relevant": true }
