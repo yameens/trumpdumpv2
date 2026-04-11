@@ -4,6 +4,8 @@ import path from "path";
 const backendPath = path.resolve(__dirname, "../src/backend");
 
 const nextConfig: NextConfig = {
+  outputFileTracingRoot: path.resolve(__dirname, ".."),
+
   webpack(config) {
     config.resolve = config.resolve ?? {};
 
