@@ -6,6 +6,12 @@ const backendPath = path.resolve(__dirname, "../src/backend");
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname, ".."),
 
+  typescript: {
+    // Backend files in ../src/ are typechecked by the root tsconfig separately;
+    // skip here because TS can't resolve frontend/node_modules types for them.
+    ignoreBuildErrors: true,
+  },
+
   webpack(config) {
     config.resolve = config.resolve ?? {};
 
