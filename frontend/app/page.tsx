@@ -46,7 +46,7 @@ export default function Home() {
 
       {/* ── Description ── */}
       <p className={styles.description}>
-        Trump&apos;s words carry some weight in the stock market, kinda. Here, we map Mr. President&apos;s latest Truth Social posts onto directional changes to stock tickers. Direction and magnitude based on precedence (through ML).
+        Trump&apos;s words carry some weight in the stock market, kinda. Here, we map Mr. President&apos;s latest Truth Social posts onto directional changes to stock tickers. The direction and magnitude are based on precedence (through ML).
       </p>
 
       {/* ── Recent Posts ── */}

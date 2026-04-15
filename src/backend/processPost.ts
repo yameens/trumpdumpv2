@@ -209,10 +209,8 @@ Ensure the output is strictly JSON with no prose, no markdown fences, and no ext
 
 /** Matches the database schema exactly (database.txt). */
 export interface AnalysisResult {
-  /** ISO 8601 timestamp of the original post. */
-  timestamp: string;
   sentiment: 'bullish' | 'bearish';
-  /** Clean 2-sentence summary produced by the LLM. */
+  /** Internal analysis summary (not stored in DB — DB uses scraped.content). */
   content: string;
   /** LLM certainty of market impact, 0–100. */
   confidence: number;
@@ -288,12 +286,6 @@ function validateAndNormalize(
 
   const obj = raw as Record<string, unknown>;
 
-  // timestamp
-  const timestamp = obj['timestamp'];
-  if (typeof timestamp !== 'string' || !timestamp) {
-    throw new Error(`[processPost] Invalid or missing "timestamp": ${JSON.stringify(timestamp)}`);
-  }
-
   // sentiment
   const sentiment = obj['sentiment'];
   if (sentiment !== 'bullish' && sentiment !== 'bearish') {
@@ -338,7 +330,7 @@ function validateAndNormalize(
   const tickers =
     tickerList.length > 0 ? allTickers.filter((t) => tickerList.includes(t)) : allTickers;
 
-  return { timestamp, sentiment, content: content.trim(), confidence, industry, tickers };
+  return { sentiment, content: content.trim(), confidence, industry, tickers };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
