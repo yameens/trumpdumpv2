@@ -27,7 +27,7 @@ const L_PW = L_X1 - L_X0;   // 368
 const L_PH = L_Y1 - L_Y0;   // 320
 
 // ── Right panel — feature importance ─────────────────────────────────────────
-const R_X0 = 590, R_X1 = 880;
+const R_X0 = 552, R_X1 = 856;
 const R_Y0 = 100, R_Y1 = 390;
 const R_PW = R_X1 - R_X0;   // 401
 const R_PH = R_Y1 - R_Y0;   // 290

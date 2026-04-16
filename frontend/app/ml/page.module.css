@@ -45,8 +45,9 @@
 .subtitle {
   font-family: var(--font-pixelify), monospace;
   font-size: 1.1rem;
+  font-weight: 700;
   color: rgba(0, 0, 0, 0.45);
-  margin-top: 6px;
+  margin-top: 18px;
   letter-spacing: 0.08em;
 }
 
@@ -57,7 +58,7 @@
   margin: 28px auto 0;
   padding: 0 16px;
   font-family: var(--font-pixelify), monospace;
-  font-size: 1rem;
+  font-size: 1.15rem;
   line-height: 1.7;
   color: rgba(0, 0, 0, 0.55);
   text-align: center;
