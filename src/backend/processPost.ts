@@ -176,6 +176,106 @@ export const TICKER_LIST: string[] = [
   "TSM", "ASML", "ARM", "SMCI", "SNDK", "LUMN", "FIGS", "BCBP"
 ];
 
+// ── INDUSTRY → ETF MAP ───────────────────────────────────────────────────────
+// Each industry in INDUSTRY_LIST maps to the most representative sector ETF.
+// This is looked up deterministically after the LLM picks an industry — no LLM
+// call needed, and the ETF is always consistent for a given industry string.
+export const INDUSTRY_ETF_MAP: Record<string, string> = {
+  // --- ENERGY ---
+  "Energy Equipment & Services":                          "OIH",   // VanEck Oil Services ETF
+  "Oil, Gas & Consumable Fuels":                          "XLE",   // Energy Select Sector SPDR
+
+  // --- MATERIALS ---
+  "Chemicals":                                            "XLB",   // Materials Select Sector SPDR
+  "Construction Materials":                               "XLB",
+  "Containers & Packaging":                               "XLB",
+  "Metals & Mining":                                      "XME",   // SPDR S&P Metals & Mining
+  "Paper & Forest Products":                              "XLB",
+
+  // --- INDUSTRIALS ---
+  "Aerospace & Defense":                                  "ITA",   // iShares US Aerospace & Defense
+  "Building Products":                                    "XLI",   // Industrials Select Sector SPDR
+  "Construction & Engineering":                           "XLI",
+  "Electrical Equipment":                                 "XLI",
+  "Industrial Conglomerates":                             "XLI",
+  "Machinery":                                            "XLI",
+  "Trading Companies & Distributors":                     "XLI",
+  "Commercial Services & Supplies":                       "XLI",
+  "Professional Services":                                "XLI",
+  "Air Freight & Logistics":                              "XTN",   // SPDR S&P Transportation
+  "Airlines":                                             "JETS",  // US Global Jets ETF
+  "Marine Transportation":                                "XTN",
+  "Ground Transportation":                                "XTN",
+  "Transportation Infrastructure":                        "XTN",
+
+  // --- CONSUMER DISCRETIONARY ---
+  "Automobile Components":                                "XLY",   // Consumer Discretionary Select Sector SPDR
+  "Automobiles":                                          "XLY",
+  "Household Durables":                                   "XLY",
+  "Leisure Products":                                     "XLY",
+  "Textiles, Apparel & Luxury Goods":                     "XLY",
+  "Hotels, Restaurants & Leisure":                        "XLY",
+  "Diversified Consumer Services":                        "XLY",
+  "Broadline Retail":                                     "XRT",   // SPDR S&P Retail ETF
+  "Specialty Retail":                                     "XRT",
+
+  // --- CONSUMER STAPLES ---
+  "Consumer Staples Distribution & Retail":               "XLP",   // Consumer Staples Select Sector SPDR
+  "Beverages":                                            "XLP",
+  "Food Products":                                        "XLP",
+  "Tobacco":                                              "XLP",
+  "Household Products":                                   "XLP",
+  "Personal Care Products":                               "XLP",
+
+  // --- HEALTH CARE ---
+  "Health Care Equipment & Supplies":                     "IHI",   // iShares US Medical Devices
+  "Health Care Providers & Services":                     "IHF",   // iShares US Healthcare Providers
+  "Health Care Technology":                               "XLV",   // Health Care Select Sector SPDR
+  "Biotechnology":                                        "IBB",   // iShares Biotechnology ETF
+  "Pharmaceuticals":                                      "IHE",   // iShares US Pharmaceuticals
+  "Life Sciences Tools & Services":                       "XLV",
+
+  // --- FINANCIALS ---
+  "Banks":                                                "KBE",   // SPDR S&P Bank ETF
+  "Financial Services":                                   "XLF",   // Financials Select Sector SPDR
+  "Consumer Finance":                                     "XLF",
+  "Capital Markets":                                      "IAI",   // iShares US Broker-Dealers
+  "Insurance":                                            "KIE",   // SPDR S&P Insurance ETF
+  "Mortgage Real Estate Investment Trusts (REITs)":       "REM",   // iShares Mortgage Real Estate
+
+  // --- INFORMATION TECHNOLOGY ---
+  "IT Services":                                          "XLK",   // Technology Select Sector SPDR
+  "Software":                                             "IGV",   // iShares Expanded Tech-Software
+  "Communications Equipment":                             "XLK",
+  "Technology Hardware, Storage & Peripherals":           "XLK",
+  "Electronic Equipment, Instruments & Components":       "XLK",
+  "Semiconductors & Semiconductor Equipment":             "SOXX",  // iShares Semiconductor ETF
+
+  // --- COMMUNICATION SERVICES ---
+  "Diversified Telecommunication Services":               "IYZ",   // iShares US Telecommunications
+  "Wireless Telecommunication Services":                  "IYZ",
+  "Media":                                                "XLC",   // Communication Services Select Sector SPDR
+  "Entertainment":                                        "XLC",
+  "Interactive Media & Services":                         "XLC",
+
+  // --- UTILITIES ---
+  "Electric Utilities":                                   "XLU",   // Utilities Select Sector SPDR
+  "Gas Utilities":                                        "XLU",
+  "Multi-Utilities":                                      "XLU",
+  "Water Utilities":                                      "PHO",   // Invesco Water Resources ETF
+  "Independent Power and Renewable Electricity Producers":"ICLN",  // iShares Global Clean Energy
+
+  // --- REAL ESTATE ---
+  "Real Estate Management & Development":                 "XLRE",  // Real Estate Select Sector SPDR
+  "Equity Real Estate Investment Trusts (REITs)":         "VNQ",   // Vanguard Real Estate ETF
+
+  // --- MISC / CATCH-ALL ---
+  "Conglomerates":                                        "XLI",
+  "Cryptocurrency & Digital Assets":                      "IBIT",  // iShares Bitcoin Trust
+  "Government & Policy":                                  "TLT",   // iShares 20+ Year Treasury Bond
+  "Other / Diversified":                                  "SPY",   // SPDR S&P 500 ETF
+};
+
 // ── LLM MODEL ────────────────────────────────────────────────────────────────
 const LLM_MODEL = 'gpt-4o';
 
@@ -216,6 +316,8 @@ export interface AnalysisResult {
   confidence: number;
   /** One entry from INDUSTRY_LIST. */
   industry: string;
+  /** Representative sector ETF for the industry, looked up from INDUSTRY_ETF_MAP. */
+  etf: string;
   /** Stock tickers mentioned, e.g. ["AAPL", "NVDA"]. */
   tickers: string[];
 }
@@ -330,7 +432,7 @@ function validateAndNormalize(
   const tickers =
     tickerList.length > 0 ? allTickers.filter((t) => tickerList.includes(t)) : allTickers;
 
-  return { sentiment, content: content.trim(), confidence, industry, tickers };
+  return { sentiment, content: content.trim(), confidence, industry, etf: '', tickers };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -401,13 +503,16 @@ export async function processPost(post: ScrapedPost): Promise<AnalysisResult | n
 
   const result = validateAndNormalize(raw, INDUSTRY_LIST, TICKER_LIST);
 
+  // Deterministic ETF lookup — no extra LLM call needed
+  result.etf = INDUSTRY_ETF_MAP[result.industry] ?? 'SPY';
+
   // Override confidence with the dedicated scoring call
   result.confidence = await scoreConfidence(post, result);
 
   console.log(
     `[processPost] Analysis complete — sentiment: ${result.sentiment}, ` +
       `confidence: ${result.confidence}, industry: ${result.industry}, ` +
-      `tickers: [${result.tickers.join(', ')}]`,
+      `etf: ${result.etf}, tickers: [${result.tickers.join(', ')}]`,
   );
 
   return result;

@@ -120,9 +120,6 @@ async function scrapeLatestPost(): Promise<ScrapedPost> {
 
   // Full post text — cheerio's .text() strips tags; trim normalises whitespace
   const content = firstStatus.find('.status__content').text().trim();
-  if (!content) {
-    throw new Error(`[sync] Empty content scraped for status ${statusId}`);
-  }
 
   return { statusId, truthSocialId, timestamp, content };
 }
@@ -161,6 +158,7 @@ async function insertPost(
     content:    scraped.content,
     confidence: result.confidence,
     industry:   result.industry,
+    etf:        result.etf,
     tickers:    result.tickers,
   });
   if (error) {
@@ -189,6 +187,11 @@ export async function syncLatestPost(): Promise<void> {
   console.log(
     `[sync] Scraped: statusId=${scraped.statusId} | truthSocialId=${scraped.truthSocialId} | ${scraped.timestamp}`,
   );
+
+  if (!scraped.content) {
+    console.log(`[sync] Status ${scraped.statusId} has no text content (likely media-only). Skipping.`);
+    return;
+  }
 
   // Step 2 — hash scraped content
   const scrapedHash = computeHash(scraped.content);

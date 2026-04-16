@@ -2,3 +2,10 @@
 node_modules/
 dist/
 .vercel
+
+# ML project
+ml/.venv/
+ml/data/
+
+# code editor
+.cursor/plans
