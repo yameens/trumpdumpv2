@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import styles from './page.module.css';
@@ -187,7 +188,14 @@ export default function MLPage() {
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <header className={styles.header}>
-        <h1 className={styles.title}>MARKET REACTION</h1>
+        <Image
+          src="/market-reaction.png"
+          alt="MARKET REACTION"
+          width={480}
+          height={80}
+          className={styles.titleImage}
+          priority
+        />
         <p className={styles.subtitle}>{subtitle}</p>
       </header>
 

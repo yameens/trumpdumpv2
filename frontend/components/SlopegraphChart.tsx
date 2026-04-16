@@ -53,6 +53,20 @@ export default function SlopegraphChart() {
     return <p className={styles.loading}>Loading chart…</p>;
   }
 
+  // ── Label collision avoidance for left-side labels ──────────────────────────
+  // Neutral (+0.41) and Negative (+0.56) at T+10 are only ~5px apart in SVG.
+  // Push labels apart so there's at least 30px between their centre Y positions.
+  const labelY: Record<string, number> = {};
+  SENTIMENTS.forEach((s) => { labelY[s] = toY(data[s].ar10); });
+  const sorted = [...SENTIMENTS].sort((a, b) => labelY[a] - labelY[b]);
+  for (let i = 1; i < sorted.length; i++) {
+    if (labelY[sorted[i]] - labelY[sorted[i - 1]] < 30) {
+      const mid = (labelY[sorted[i]] + labelY[sorted[i - 1]]) / 2;
+      labelY[sorted[i - 1]] = mid - 15;
+      labelY[sorted[i]]     = mid + 15;
+    }
+  }
+
   return (
     <div className={styles.wrap}>
       <svg
@@ -154,14 +168,14 @@ export default function SlopegraphChart() {
               {/* Right dot */}
               <rect x={AX_RIGHT - 4} y={y60 - 4} width={8} height={8} fill={color} />
 
-              {/* Left labels */}
-              <text x={AX_LEFT - 16} y={y10 - 6}
+              {/* Left labels — use bumped Y to avoid collision */}
+              <text x={AX_LEFT - 16} y={labelY[s] - 6}
                 textAnchor={leftAnchor} fontSize={12}
                 fontFamily="var(--font-pixelify), monospace"
                 fill={color} fontWeight="bold">
                 {label}
               </text>
-              <text x={AX_LEFT - 16} y={y10 + 9}
+              <text x={AX_LEFT - 16} y={labelY[s] + 9}
                 textAnchor={leftAnchor} fontSize={11}
                 fontFamily="var(--font-pixelify), monospace" fill={color}>
                 {v10 > 0 ? '+' : ''}{v10.toFixed(2)} bps

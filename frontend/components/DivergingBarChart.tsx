@@ -207,7 +207,7 @@ export default function DivergingBarChart() {
         })}
 
         {/* ── Annotation ────────────────────────────────────────────────────── */}
-        <text x={PAD.left + 8} y={PAD.top + 14} fontSize={11} fill="#555" fontWeight={700}>
+        <text x={PAD.left + 8} y={PAD.top - 10} fontSize={11} fill="#555" fontWeight={700}>
           Positive posts only  ·  60-min window
         </text>
       </svg>
