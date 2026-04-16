@@ -73,6 +73,21 @@
   padding: 32px 0;
 }
 
+/* ── ML link in description ───────────────────────────────── */
+.mlLink {
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: #000;
+  text-decoration-thickness: 2px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.mlLink:hover {
+  color: #71BC78;
+  text-decoration-color: #71BC78;
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 600px) {
   .gifAbove {

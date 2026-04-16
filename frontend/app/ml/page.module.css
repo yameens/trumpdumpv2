@@ -1,0 +1,235 @@
+/* ── Page wrapper ─────────────────────────────────────────── */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ── Nav ──────────────────────────────────────────────────── */
+.nav {
+  width: 100%;
+  max-width: 900px;
+  padding: 20px 16px 0;
+}
+
+.backLink {
+  font-family: var(--font-pixelify), monospace;
+  font-size: 1rem;
+  color: #000;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s;
+}
+
+.backLink:hover {
+  border-bottom-color: #71BC78;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.header {
+  margin-top: 36px;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-pixelify), monospace;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #000;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-pixelify), monospace;
+  font-size: 1.1rem;
+  color: rgba(0, 0, 0, 0.45);
+  margin-top: 6px;
+  letter-spacing: 0.08em;
+}
+
+/* ── Intro ────────────────────────────────────────────────── */
+.intro {
+  width: 100%;
+  max-width: 900px;
+  margin: 28px auto 0;
+  padding: 0 16px;
+  font-family: var(--font-pixelify), monospace;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+
+/* ── Carousel row: arrows flanking the chart ──────────────── */
+.carousel {
+  width: 100%;
+  max-width: 980px;
+  margin: 32px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+}
+
+.chartArea {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  /* Lock the container to the SVG's 900×480 aspect ratio so the arrows
+     never shift, even during the brief dynamic-import loading phase. */
+  aspect-ratio: 900 / 480;
+  overflow: hidden;
+}
+
+/* Both chart slots sit in the same space; opacity transition crossfades them. */
+.chartVisible {
+  position: relative;
+  width: 100%;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+}
+
+.chartHidden {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Pixel-art arrow buttons */
+.arrowBtn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  font-family: var(--font-pixelify), monospace;
+  font-size: 1.2rem;
+  line-height: 1;
+  background: #fff;
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.08s, transform 0.08s;
+  user-select: none;
+}
+
+.arrowBtn:hover {
+  box-shadow: 2px 2px 0 #000;
+  transform: translate(1px, 1px);
+}
+
+.arrowBtn:active {
+  box-shadow: 1px 1px 0 #000;
+  transform: translate(2px, 2px);
+}
+
+/* ── Chart indicator dots ─────────────────────────────────── */
+.dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  justify-content: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: #ccc;
+  border: 1.5px solid #000;
+  cursor: pointer;
+  padding: 0;
+  image-rendering: pixelated;
+  transition: background 0.15s;
+}
+
+.dotActive {
+  background: #000;
+}
+
+/* ── Loading ──────────────────────────────────────────────── */
+.loadingText {
+  text-align: center;
+  font-family: var(--font-pixelify), monospace;
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 48px 0;
+}
+
+/* ── Key findings ─────────────────────────────────────────── */
+.findings {
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto 0;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.findingCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 2px solid #000;
+  box-shadow: 3px 3px 0 #000;
+  background: #fff;
+  font-family: var(--font-pixelify), monospace;
+}
+
+.findingDot {
+  flex-shrink: 0;
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin-top: 4px;
+  image-rendering: pixelated;
+}
+
+.findingCard strong {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.findingCard p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+/* ── Methodology ──────────────────────────────────────────── */
+.methodology {
+  width: 100%;
+  max-width: 900px;
+  margin: 32px auto 0;
+  padding: 0 16px;
+  font-family: var(--font-pixelify), monospace;
+  font-size: 0.82rem;
+  color: rgba(0, 0, 0, 0.35);
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .findingCard {
+    padding: 14px 14px;
+  }
+}

@@ -1,0 +1,23 @@
+.chartWrap {
+  width: 100%;
+  border: 2px solid #000;
+  box-shadow: 4px 4px 0 #000;
+  background: #fafafa;
+  image-rendering: pixelated;
+  overflow: hidden;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.loadingText {
+  text-align: center;
+  font-family: var(--font-pixelify), monospace;
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.45);
+  padding: 48px 0;
+}

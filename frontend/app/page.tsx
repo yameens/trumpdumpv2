@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import PostBox from '@/components/PostBox';
 import type { Post } from '@/types';
 import styles from './page.module.css';
@@ -46,7 +47,7 @@ export default function Home() {
 
       {/* ── Description ── */}
       <p className={styles.description}>
-        Trump&apos;s words carry some weight in the stock market, kinda. Here, we map Mr. President&apos;s latest Truth Social posts onto directional changes to stock tickers. The direction and magnitude are based on precedence (through ML).
+        Trump&apos;s words carry some weight in the stock market, kinda. Here, we map Mr. President&apos;s latest Truth Social posts onto directional changes to stock tickers. The direction and magnitude are based on precedence (<Link href="/ml" className={styles.mlLink}>through ML</Link>).
       </p>
 
       {/* ── Recent Posts ── */}

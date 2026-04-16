@@ -1,0 +1,57 @@
+{
+  "n_samples": 3784,
+  "threshold_bps": 5,
+  "accuracy": 0.7984,
+  "baseline_accuracy": 0.4744,
+  "cv_mean": 0.7104,
+  "cv_std": 0.0087,
+  "classes": [
+    "down",
+    "flat",
+    "up"
+  ],
+  "per_class": {
+    "down": {
+      "precision": 0.6922,
+      "recall": 0.7164,
+      "f1": 0.7041,
+      "support": 1033
+    },
+    "flat": {
+      "precision": 0.9629,
+      "recall": 0.8958,
+      "f1": 0.9281,
+      "support": 1795
+    },
+    "up": {
+      "precision": 0.644,
+      "recall": 0.704,
+      "f1": 0.6727,
+      "support": 956
+    }
+  },
+  "confusion_matrix": [
+    [
+      740,
+      31,
+      262
+    ],
+    [
+      77,
+      1608,
+      110
+    ],
+    [
+      252,
+      31,
+      673
+    ]
+  ],
+  "feature_importance": {
+    "target_sector": 0.6448,
+    "market_period": 0.1429,
+    "tw_sentiment": 0.0788,
+    "hour": 0.0688,
+    "day_of_week": 0.0648
+  }
+}
