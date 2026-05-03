@@ -506,6 +506,12 @@ export async function processPost(post: ScrapedPost): Promise<AnalysisResult | n
   // Deterministic ETF lookup — no extra LLM call needed
   result.etf = INDUSTRY_ETF_MAP[result.industry] ?? 'SPY';
 
+  // If the LLM found no specific company tickers, fall back to the industry ETF
+  // so the frontend always has something to display
+  if (result.tickers.length === 0) {
+    result.tickers = [result.etf];
+  }
+
   // Override confidence with the dedicated scoring call
   result.confidence = await scoreConfidence(post, result);
 
