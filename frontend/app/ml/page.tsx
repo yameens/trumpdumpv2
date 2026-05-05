@@ -40,17 +40,17 @@ const TRAJECTORY_FINDINGS: FindingCard[] = [
   {
     color: '#71BC78',
     title: 'Negative posts',
-    body: 'Sector ETFs trend above SPY for the full hour. The move persists and grows — real repricing of policy risk, not HFT noise.',
+    body: 'Sector ETFs trend above SPY for the full hour. The move persists and grows.',
   },
   {
     color: '#888888',
     title: 'Neutral posts',
-    body: 'Slight pop in the first 5 minutes, then flat. Classic noise pattern — fast reversion with no sustained direction.',
+    body: 'Slight pop in the first 5 minutes, then flat. Classic noise pattern, showing fast reversion with no sustained direction.',
   },
   {
     color: '#B31B1B',
     title: 'Positive posts',
-    body: 'Sector ETFs sink below SPY and keep falling for 60 minutes. Political cheerleading reads as noise — the market discounts it.',
+    body: 'Sector ETFs sink below SPY and keep falling for 60 minutes. Political cheerleading reads as noise, discounted by the market.',
   },
 ];
 
@@ -58,17 +58,17 @@ const DIVERGING_FINDINGS: FindingCard[] = [
   {
     color: '#71BC78',
     title: 'Energy & Utilities',
-    body: 'The only two sectors with positive AR_60 after a positive Trump post (+10.1 and +23.9 bps). Pro-energy rhetoric is read as a deregulation signal.',
+    body: 'The only two sectors with positive AR 60 after a positive Trump post (+10.1 and +23.9 bps). Pro-energy rhetoric is seen as a deregulation signal.',
   },
   {
     color: '#B31B1B',
     title: 'Communications & Staples',
-    body: 'Hardest hit at 60 min. Media-adjacent positive posts (−18.7 bps) and food/consumer brands (−16.7 bps) tank relative to SPY.',
+    body: 'Hardest hit at 60 min. Media adjacent positive posts (−18.7 bps) and food/consumer brands (−16.7 bps) tank relative to SPY.',
   },
   {
     color: '#888888',
     title: 'The wall of red',
-    body: '9 of 12 sectors show negative AR_60 after positive posts. Political cheerleading does not move sectors up — the market discounts it.',
+    body: '9 of 12 sectors show negative AR 60 after positive posts. Political cheerleading does not move sectors up, discounted by the market.',
   },
 ];
 
@@ -76,17 +76,17 @@ const SCATTER_FINDINGS: FindingCard[] = [
   {
     color: '#000000',
     title: 'r = 0.70 correlation',
-    body: 'The 10-minute abnormal return predicts the 60-minute outcome with 70% Pearson correlation. The 10-min signal is not noise — it is a leading indicator.',
+    body: 'The 10-minute abnormal return predicts the 60-minute outcome with 70% Pearson correlation. The 10 min signal is not noise and it is a leading indicator.',
   },
   {
     color: '#71BC78',
     title: 'Slope > 1.0×',
-    body: 'OLS slope of 1.03 means the effect amplifies rather than fades. Algo reactions are not erased by human traders an hour later — they compound them.',
+    body: 'OLS slope of 1.03 means the effect amplifies rather than fades. Algo reactions are not erased by human traders an hour later, they compound them.',
   },
   {
     color: '#B31B1B',
     title: 'Dots above the 45° line',
-    body: 'For negative-sentiment posts (green), most dots sit above y = x, confirming the effect grew from 10 to 60 minutes. Genuine information absorption.',
+    body: 'For negative sentiment posts (green), most dots sit above y = x, confirming the effect grew from 10 to 60 minutes. Genuine information absorption.',
   },
 ];
 
@@ -94,12 +94,12 @@ const SLOPEGRAPH_FINDINGS: FindingCard[] = [
   {
     color: '#71BC78',
     title: 'Negative posts gain momentum',
-    body: '+0.56 bps at T+10 → +1.79 bps at T+60. The initial outperformance above SPY triples over the hour — real repricing of policy risk, not mean-reversion.',
+    body: '+0.56 bps at T+10 → +1.79 bps at T+60. The initial outperformance above SPY triples over the hour. This is a real repricing of policy risk and not mean-reversion.',
   },
   {
     color: '#B31B1B',
     title: 'Positive posts keep falling',
-    body: '−1.81 bps at T+10 → −4.07 bps at T+60. Political cheerleading doesn\'t just get ignored — it actively drags sectors below SPY and the gap widens.',
+    body: '−1.81 bps at T+10 → −4.07 bps at T+60. Political cheerleading doesn\'t just get ignored. It actively drags sectors below SPY and the gap widens.',
   },
   {
     color: '#888888',
@@ -117,12 +117,12 @@ const CLASSIFIER_FINDINGS: FindingCard[] = [
   {
     color: '#71BC78',
     title: 'Sector is the dominant predictor',
-    body: '64% of XGBoost\'s decision weight comes from which sector the post addresses. The words matter less than the context — Energy posts behave completely differently from Communications posts.',
+    body: '64% of XGBoost\'s decision weight comes from which sector the post addresses. The words matter less than the context. Energy posts behave completely differently from Communications posts.',
   },
   {
     color: '#888888',
     title: 'Sentiment adds independent signal',
-    body: 'At 8% importance, the RoBERTa sentiment label contributes on top of sector and timing. It\'s not redundant — it captures tone that sector alone can\'t explain.',
+    body: 'At 8% importance, the RoBERTa sentiment label contributes on top of sector and timing. It\'s not redundant. It captures tone that sector alone can\'t explain.',
   },
 ];
 
@@ -141,14 +141,14 @@ const CHARTS = [
     subtitle: 'sector breakdown',
     findings: DIVERGING_FINDINGS,
     intro:
-      "Mean AR_60 for each GICS sector when Trump posts something positive-toned. Bars left of zero (red) underperform SPY; bars right of zero (green) outperform. Sorted by magnitude.",
+      "Mean AR 60 for each GICS sector when Trump posts something positive-toned. Bars left of zero (red) underperform SPY. Bars right of zero (green) outperform. Sorted by magnitude.",
   },
   {
     component: ScatterPlot,
     subtitle: 'signal persistence',
     findings: SCATTER_FINDINGS,
     intro:
-      "Every post plotted as AR\u2081\u2080 (x) vs AR\u2086\u2080 (y), coloured by sentiment. The dashed line is y\u202f=\u202fx (no change). The black line is the OLS trendline. Points above the dashed line amplified; points below faded.",
+      "Every post plotted as AR\u2081\u2080 (x) vs AR\u2086\u2080 (y), coloured by sentiment. The dashed line is y\u202f=\u202fx (no change). The black line is the OLS trendline. Points above the dashed line amplified. Points below faded.",
   },
   {
     component: SlopegraphChart,

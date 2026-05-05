@@ -15,7 +15,6 @@ export interface PostBoxProps {
 // ── Assets ────────────────────────────────────────────────────────────────────
 
 const TRUMP_PHOTOS = [
-  '2ad31cdb60c2a4d218efa6320d52a075.png',
   '534ceee6bbe2671091bd0e9c63a5556d.png',
   '607719-djt-removebg-preview.png',
   'finaltrump.png',

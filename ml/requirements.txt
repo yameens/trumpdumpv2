@@ -1,0 +1,11 @@
+pandas
+yfinance
+transformers
+torch
+numpy
+openai
+datasets
+pyarrow
+tqdm
+scikit-learn
+xgboost
