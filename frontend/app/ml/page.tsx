@@ -134,7 +134,7 @@ const CHARTS = [
     subtitle: 'minute-by-minute',
     findings: TRAJECTORY_FINDINGS,
     intro:
-      "Average Cumulative Abnormal Return (CAR) in the 10 minutes before and 60 minutes after each of Trump\u2019s 3,817 financially relevant Truth Social posts \u2014 grouped by sentiment. CAR = sector ETF return minus SPY return, measured in basis points (bps).",
+      "Average Cumulative Abnormal Return (CAR) in the 10 minutes before and 60 minutes after each of Trump\u2019s 3,817 financially relevant Truth Social posts, grouped by sentiment. CAR = sector ETF return minus SPY return, measured in basis points (bps).",
   },
   {
     component: DivergingBarChart,
